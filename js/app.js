@@ -44,10 +44,44 @@ function onhrmControlBtnClick() {
     if (hrmControlBtn.innerHTML === TEXT_START){
         console.log("info on button = start");
         startSensor();
+        playSound();
+        
     } else {
         console.log("info on button = stop");
         stopSensor();
     }
+}
+
+function playSound() {
+	
+    /* Grab the sound from the backend */	
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', './audio/HelloWorld-16bit.wav', true);
+	xhr.responseType = 'arraybuffer';
+	xhr.onload = function () {
+	    /* Processing response data - xhr.response */
+	};
+	xhr.onerror = function () {
+	    /* Handling errors */
+	};
+	xhr.send();
+	
+	/* Decoding audio data. */
+	var context = new webkitAudioContext();
+	context.decodeAudioData(xhr.response, function onSuccess (buffer) {
+	    if (! buffer) {
+	        alert('Error decoding file data.');
+	        return;
+	    }
+	}, function onError (error) {
+	    alert('Error decoding file data.');
+	});
+
+	var source = context.createBufferSource(); /* Create SourceNode. */
+	source.buffer = buffer; /* buffer variable is data of AudioBuffer type from the decodeAudioData() function. */
+	source.connect(context.destination); /* Connect SourceNode to DestinationNode. */
+	source.noteOn(0); /* Play sound. */
+
 }
 
 /*
