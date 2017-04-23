@@ -27,3 +27,5 @@ tags
 *swo
 *.env
 *tmp*
+.meta*
+BendoProj

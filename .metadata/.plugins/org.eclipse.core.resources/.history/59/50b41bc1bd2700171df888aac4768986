@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,user-scalable=no">
+	<title>Circular UI</title>
+  <script type="text/javascript" href="script.js"></script>
+	<link rel="stylesheet" href="lib/tau/wearable/theme/default/tau.min.css">
+	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="lib/tau/wearable/theme/default/tau.circle.min.css">
+	<!-- load theme file for your application -->
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="init()">
+    <div class="ui-page ui-page-active" id="main">
+        <div class="ui-header">
+            <h2 class="ui-title">Hello World!!!</h2>
+        </div>
+        <div class="ui-content">
+            <div id="heart-rate-value"></div>
+            <div id="heart">
+                <div id="heart-img"></div>
+            </div>
+            <div id="measuring-info" class="hide">
+                Measuring...
+            </div>
+        </div>
+        <footer class="ui-footer ui-bottom-button">
+            <a id="hrm-control-btn" class="ui-btn">Start</a>
+        </footer>
+</div>
+<div class="ui-page" id="info">
+    <div class="ui-header">
+        <h2 class="ui-title">HRM Info</h2>
+    </div>
+    <div class="ui-content">
+        <div class="info-text">
+            Try again. Clean the sensor, wear the watch properly.
+        </div>
+    </div>
+    <footer class="ui-footer ui-bottom-button">
+        <a id="info-back-btn" class="ui-btn">Back</a>
+    </footer>
+</div>
+  <div id="HRdiv">
+    <h1>Hearbeat Sensor Data</h1>
+    <div id="HRtargetdiv"></div>
+  </div>
+    <script type="text/javascript" src="lib/tau/wearable/js/tau.min.js"></script>
+    <script type="text/javascript" src="js/circle-helper.js"></script>
+    <script src="./js/app.js"></script>
+    <script src="lowBatteryCheck.js"></script>
+</body>
+</html>
