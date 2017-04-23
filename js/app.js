@@ -20,7 +20,7 @@ var sensorStarted = false;
 var accelStart = true;
 
 var initial = new Date().getTime();
-var dataLength = 5;
+var dataLength = 100;
 var dpsX = [];
 var dpsY = [];
 var dpsZ = [];
@@ -453,7 +453,7 @@ function updateChart(x, y, z) {
 
 function deviceMotionHandler(e) {
     if (dummy === true) {
-        if (dummyACcnt < 10) {
+        if (dummyACcnt < 0) {
             dummyACcnt++;
             return;
         }
