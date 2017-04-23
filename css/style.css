@@ -2,6 +2,12 @@
   background-color: pink;
   width: 50%;
 } */
+#container {
+	z-index: 1;
+	background-color: white;
+	opacity: 0.3;
+	height: 25%;
+}
 #heart-rate-value {
     position: absolute;
     text-align: center;
@@ -9,7 +15,7 @@
     height: 20%;
     font-size: 35px;
     font-weight: bold;
-    z-index: 100;
+    z-index: 3;
     margin-top: 55%;
     margin-left: -20%;
     color: red;
@@ -87,6 +93,7 @@
     left: 4.5em;
     opacity: 0.5;
     background-color: yellow;
+    z-index: 5;
 }
 
 #timerdata {
@@ -96,7 +103,7 @@
 
 #accelerometercontainer {
     position: fixed;
-    width: 13%;
+    width: 30%;
     height: 13%;
     bottom: 0.9em;
     left: 6.5em;
@@ -107,17 +114,33 @@
 	color: green;
 	font-size: 10px;
 }
+#buttoncontainer {
+	height: 75%;
+	text-align: center;
+}
 #yesbutton {
 	background-color: #ff9e2c;
 	position: absolute;
 	left: 0px;
 	width: 50%;
+	height: 100%;
+	opacity: 0.7;
+}
+#yesbuttontext {
+	margin: 4.5em 0 0 0;	
+	font-weight: bold;
+}
+#nobuttontext {
+	margin: 4.5em 0 0 0;
+	font-weight: bold;
 }
 #nobutton {
 	background-color: #b6701e;
 	position: absolute;
 	right: 0px;
 	width: 50%;
+	height: 100%;
+	opacity: 0.7;
 } 
 
 
