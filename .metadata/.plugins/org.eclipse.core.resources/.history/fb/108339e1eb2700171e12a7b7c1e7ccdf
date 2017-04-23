@@ -1,9 +1,0 @@
-$(function() {
-//    var $HRDataAppending = function(data){
-//      $('#HRtargetdiv').append(data)
-//    }
-	var background = function(){
-		return $(body).css('background-color', 'red');
-	}
-	background();
-});
