@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<profiles version="3.0">
+<profile name="Jonathan">
+<profileitem ca="/Users/jonathan/tizen-studio/tools/certificate-generator/certificates/developer/tizen-developer-ca.cer" distributor="0" key="/Users/jonathan/tizen-studio-data/keystore/author/GalaxyGear3.p12" password="i4ZN1PQq4i5dk8dicr8qug==" rootca=""/>
+<profileitem ca="/Users/jonathan/tizen-studio/tools/certificate-generator/certificates/distributor/tizen-distributor-ca.cer" distributor="1" key="/Users/jonathan/tizen-studio/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.p12" password="Vy63flx5JBMc5GA4iEf8oFy+8aKE7FX/+arrDcO4I5k=" rootca=""/>
+<profileitem ca="" distributor="2" key="" password="xmEcrXPl1ss=" rootca=""/>
+</profile>
+</profiles>

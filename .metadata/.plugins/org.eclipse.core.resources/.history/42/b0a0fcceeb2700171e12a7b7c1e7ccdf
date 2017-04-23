@@ -1,0 +1,5 @@
+$(function() {
+    var $HRDataAppending = function(data){
+      $('#HRtargetdiv').append(data)
+    }
+});
