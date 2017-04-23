@@ -25,6 +25,9 @@ var dpsX = [];
 var dpsY = [];
 var dpsZ = [];
 
+var dummy = true;
+var hr_idx = 0;
+
 var DB_VERSION = 5,
     DB_NAME = "SensorData",
     DB_DISPLAY_NAME = "sensordata_db",
@@ -37,7 +40,7 @@ var DB_VERSION = 5,
     idbObjectStore,
     popupStatus = "Deactive";
 
-function startSensor() {
+function startSensors() {
     console.log("start sensor() called...");
     sensorStarted = true;
     clearTimers();
@@ -47,6 +50,7 @@ function startSensor() {
 
     tizen.humanactivitymonitor.start('HRM', onHeartRateDataChange, onerrorCB);
     //tizen.humanactivitymonitor.start('WRIST_UP', onWUDataChange, onerrorCB);
+    //AccelToggle();
 }
 
 /*
@@ -61,8 +65,16 @@ function init()
     infoBackBtn = document.getElementById('info-back-btn');
     hrmControlBtn= document.getElementById('hrm-control-btn');
     measuringText = document.getElementById('measuring-info');
-    startSensor();
+
+    startSensors();
+
     //Registering click event handler for buttons.
+	document.addEventListener('tizenhwkey', function(e) {
+        if(e.keyName == "back") {
+            stopSensor();
+            tizen.application.getCurrentApplication().exit();
+        }
+    });
 }
 
 /*
@@ -86,7 +98,12 @@ function onHeartRateDataChange(heartRateInfo) {
         return;
     }
 
-    var rate = heartRateInfo.heartRate;
+    if (dummy === true) {
+        var rate = get_hr_data();
+        hr_idx++;
+    } else {
+        var rate = heartRateInfo.heartRate;
+    }
     var activePage = document.getElementsByClassName('ui-page-active')[0];
     var activePageId = activePage ? activePage.id : '';
 
@@ -233,6 +250,7 @@ function submitNewRecord(rate) {
         }
 
     data.timestamp = getDateTimeString();
+    console.log(data.timestamp)
 
     insertData(db, data);
 
@@ -264,7 +282,7 @@ function getDateTimeString() {
 
     return (addLeadingZero(day.getMonth() + 1, 2) + "/" + addLeadingZero(day.getDate(), 2) + " " +
         addLeadingZero(day.getHours(), 2) + ":" + addLeadingZero(day.getMinutes(), 2) + ":" +
-        addLeadingZero(day.getMilliseconds(), 3));
+        addLeadingZero(day.getSeconds(), 2) + ":" + addLeadingZero(day.getMilliseconds(), 3));
 }
 
 /**
@@ -331,7 +349,7 @@ function stopSensor() {
     clearTimers();
 
     tizen.humanactivitymonitor.stop("HRM");
-    hrmControlBtn.innerHTML = TEXT_START;
+    //hrmControlBtn.innerHTML = TEXT_START;
     loadDataView(db)
 }
 
@@ -350,7 +368,7 @@ function onInfoBackBtnClick() {
  * Accelerometer
  */
 
-function onAccelControlBtnClick() {
+function AccelToggle() {
     console.log("onAccelControlBtnClick() called...");
     if (accelStart === true){
         console.log("Starting Accel");
@@ -366,24 +384,6 @@ function onAccelControlBtnClick() {
 	    window.removeEventListener('devicemotion', deviceMotionHandler, false);
         accelStart = true;
     }
-};
-
-function startAccel() {
-    if (window.DeviceMotionEvent) {
-        console.log("Device Motion supported")
-        window.addEventListener('devicemotion', deviceMotionHandler, false);
-    } else {
-        console.log("Device Motion not supported")
-    }
-};
-
-function stopAccel() {
-    console.log("Stopping Accel")
-	window.removeEventListener('devicemotion', function() {console.log("Stopped")}, false);
-	//document.addEventListener('tizenhwkey', function(e) {
-    //    if(e.keyName == "back")
-    //        tizen.application.getCurrentApplication().exit();
-    //});
 };
 
 function updateChart(x, y, z) {
@@ -464,3 +464,134 @@ function get_data(lower, upper, points)
   }
   return result;
 }
+
+/* Pass the minimum accel, upper accel, maximum movement between samples and number of points needed
+  returns one of the arrays x, y or z.
+*/
+function get_fake_arr( min, max, max_btwn_sample, points)
+{
+  var range = (upper - lower);
+  var arr = [];
+
+ for (var i = 0; i < points ; i++) {
+    var val = upper - Math.floor((Math.random() * range ) + 1);
+    var pos = i;
+    if ( (i -1) < 0 ) {
+        pos = 0
+    }
+    while ( (val - arr[pos] ) <= max_btwn_sample ) {
+        val = upper - Math.floor((Math.random() * range ) + 1);
+    }
+    arr.push ( val );
+  }
+  return arr;
+}
+
+function get_hr_data() {
+var data = [
+	{"HR": 70},
+	{"HR": 69},
+	{"HR": 70},
+	{"HR": 68},
+	{"HR": 70},
+	{"HR": 66},
+	{"HR": 68},
+	{"HR": 67},
+	{"HR": 70},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 67},
+	{"HR": 66},
+	{"HR": 70},
+	{"HR": 66},
+	{"HR": 70},
+	{"HR": 69},
+	{"HR": 67},
+	{"HR": 67},
+	{"HR": 67},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 66},
+	{"HR": 69},
+	{"HR": 68},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 69},
+	{"HR": 69},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 70},
+	{"HR": 66},
+	{"HR": 69},
+	{"HR": 68},
+	{"HR": 70},
+	{"HR": 70},
+	{"HR": 68},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 66},
+	{"HR": 67},
+	{"HR": 66},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 69},
+	{"HR": 70},
+	{"HR": 66},
+	{"HR": 70},
+	{"HR": 66},
+	{"HR": 66},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 67},
+	{"HR": 69},
+	{"HR": 67},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 68},
+	{"HR": 69},
+	{"HR": 67},
+	{"HR": 66},
+	{"HR": 69},
+	{"HR": 66},
+	{"HR": 69},
+	{"HR": 70},
+	{"HR": 66},
+	{"HR": 70},
+	{"HR": 67},
+	{"HR": 66},
+	{"HR": 68},
+	{"HR": 66},
+	{"HR": 67},
+	{"HR": 68},
+	{"HR": 66},
+	{"HR": 66},
+	{"HR": 69},
+	{"HR": 70},
+	{"HR": 70},
+	{"HR": 69},
+	{"HR": 67},
+	{"HR": 67},
+	{"HR": 70},
+	{"HR": 68},
+	{"HR": 66},
+	{"HR": 66},
+	{"HR": 67},
+	{"HR": 66},
+	{"HR": 69},
+	{"HR": 70},
+	{"HR": 68},
+	{"HR": 70},
+	{"HR": 68},
+	{"HR": 67},
+	{"HR": 66},
+	{"HR": 70},
+	{"HR": 70},
+	{"HR": 70},
+	{"HR": 67},
+	{"HR": 66}
+];
+if (hr_idx >= data.length) {
+    hr_idx = 0;
+}
+return data[i].HR;
+};
