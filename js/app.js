@@ -20,7 +20,7 @@ var sensorStarted = false;
 var accelStart = true;
 
 var initial = new Date().getTime();
-var dataLength = 500;
+var dataLength = 5;
 var dpsX = [];
 var dpsY = [];
 var dpsZ = [];
@@ -43,7 +43,6 @@ var DB_VERSION = 5,
 function init()
 {
     console.log("init() called...");
-    //openDB(loadDataView);
     openDB();
     heartRateEl = document.getElementById('heart-rate-value');
     heartImg = document.getElementById('heart-img');
@@ -98,63 +97,6 @@ function clearTimers() {
     window.clearTimeout(infoTimeoutEnd);
     infoTimeout = 0;
     infoTimeoutEnd = 0;
-}
-
-/*
- * Callback function Handles change event on current Wrist Up.
- *
- */
-function onWUDataChange(heartRateInfo) {
-    console.log("onWUDataChange() called...");
-    if (!sensorStarted){
-        return;
-    }
-
-    var rate = heartRateInfo.heartRate;
-    var activePage = document.getElementsByClassName('ui-page-active')[0];
-    var activePageId = activePage ? activePage.id : '';
-
-    /*
-     * If heart rate value is invalid-
-     * Remove heart image animation,
-     * Displays measuring text and start a timer to show the information popup after 10 seconds.
-     */
-
-    if (rate < 1) {
-        console.log("Heart rate value < 1");
-        rate = 0;
-        heartRateEl.innerHTML = '';
-        heartImg.classList.remove('animate');
-        measuringText.classList.remove('hide');
-        measuringText.classList.add('show');
-
-        /* Start a timer when sensor is started but not able to measure the heart rate
-         * showMeasuringInfo() function will be execute after 10 sec and will show a info popup.
-         */
-
-        if (activePageId === 'main' && infoTimeout === 0) {
-            infoTimeout = window.setTimeout(showMeasuringInfo, INFO_SETTIMEOUT_DELAY);
-        }
-    } else {
-        /*
-         * If heart rate value is valid
-         * Clear all the timers to  handle info popup
-         * Hides measuring text
-         * Start the animation on heart image
-         * and displays the heart rate value.
-         */
-        clearTimers();
-        hideMeasuringInfo();
-        console.log("heartRateEl is valid information...");
-        if (!heartImg.classList.contains('animate')) {
-            heartImg.classList.add('animate');
-            measuringText.classList.remove('show');
-            measuringText.classList.add('hide');
-        }
-        heartRateEl.innerHTML = rate;
-        // Save to db
-        submitNewRecord(rate)
-    }
 }
 
 /*
@@ -292,7 +234,6 @@ function loadDataView(db) {
                 cursor.continue();
             } else {
                 console.log("cursor false")
-                //showDataView(resultBuffer);
                 console.log(resultBuffer);
 
                 return resultBuffer;
@@ -457,37 +398,6 @@ function startAccel() {
     } else {
         console.log("Device Motion not supported")
     }
-
-	//window.addEventListener('devicemotion', deviceMotionHandler);
-
-    //var proximityCapability = tizen.systeminfo.getCapability("http://tizen.org/feature/sensor.gyroscope");
-
-    //if (proximityCapability === true) {
-    //    // the device supports proximity sensor and you can get proximity sensor's data
-    //    var gyroscopeSensor = tizen.sensorservice.getDefaultSensor("GYROSCOPE");
-    //    console.log("Supported")
-    //} else {
-    //    // If tizen.sensorservice.getDefaultSensor("PROXIMITY") is used, NotSupportedError would be thrown.
-    //    console.log("Gyroscope sensor is not supported on this device.");
-    //}
-
-    //function onGetSuccessCB(sensorData) {
-    //    console.log("######## Get the gyroscope sensor date ########");
-    //    console.log("x: " + sensorData.x);
-    //    console.log("y: " + sensorData.y);
-    //    console.log("z: " + sensorData.z);
-    //}
-
-    //function onerrorCB(error) {
-    //    console.log("error occurs");
-    //}
-
-    //function onsuccessCB() {
-    //    console.log("sensor start");
-    //    gyroscopeSensor.getGyroscopeSensorData(onGetSuccessCB, onerrorCB);
-    //}
-
-    //gyroscopeSensor.start(onsuccessCB);
 };
 
 function stopAccel() {
@@ -500,26 +410,26 @@ function stopAccel() {
 };
 
 function updateChart(x, y, z) {
-	//var chart = new CanvasJS.Chart("chartContainer",{
-	//	title :{
-	//		fontColor: "#ccc",
-	//		text: "Sensor Data"
-	//	},
-	//	backgroundColor: "#222",
-	//	data: [{
-	//		color: "#1E90FF",
-	//		type: "line",
-	//		dataPoints: dpsX
-	//	}, {
-	//		color: "#228B22",
-	//		type: "line",
-	//		dataPoints: dpsY
-	//	}, {
-	//		color: "#B22222",
-	//		type: "line",
-	//		dataPoints: dpsZ
-	//	}]
-	//});
+	var chart = new CanvasJS.Chart("chartContainer",{
+		title :{
+			fontColor: "#ccc",
+			text: "Sensor Data"
+		},
+		backgroundColor: "#222",
+		data: [{
+			color: "#1E90FF",
+			type: "line",
+			dataPoints: dpsX
+		}, {
+			color: "#228B22",
+			type: "line",
+			dataPoints: dpsY
+		}, {
+			color: "#B22222",
+			type: "line",
+			dataPoints: dpsZ
+		}]
+	});
 	var lastSecond = -1;
     time = new Date().getTime() - initial;
     console.log("[" + time + ", " + x + "," + y + "," + z + "]");
@@ -544,17 +454,12 @@ function updateChart(x, y, z) {
     var second = Math.round(time / 1000.0);
 
 
-    //if(dpsX.length >= dataLength) {
-    //	chart.render();
-    //}
-    //var sensors = "<center>x: " + x + "<br>y: " + y + "<br>z: " + z + "</center>";
-    //$('#textbox').html(sensors);
+    if(dpsX.length >= dataLength) {
+        console.log("Rendering.............")
+    	chart.render();
+    }
 };
 
-	//updateChart(0, 0, 0);
-	//for(var i = 0; i < dataLength; i++) {
-	//	updateChart(0, 0, 0);
-	//}
 function deviceMotionHandler(e) {
     updateChart(
          e.accelerationIncludingGravity.x,
