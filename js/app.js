@@ -17,6 +17,17 @@ var infoTimeout = 0;
 
 var sensorStarted = false;
 
+function startSensor() {
+    console.log("start sensor() called...");
+    sensorStarted = true;
+    clearTimers();
+    measuringText.classList.remove('hide');
+    measuringText.classList.add('show');
+    // hrmControlBtn.innerHTML = TEXT_STOP;
+
+    tizen.humanactivitymonitor.start('HRM', onHeartRateDataChange, onerrorCB);
+}
+
 /*
  * Function invoked on onload event
  */
@@ -28,42 +39,32 @@ function init()
     infoBackBtn = document.getElementById('info-back-btn');
     hrmControlBtn= document.getElementById('hrm-control-btn');
     measuringText = document.getElementById('measuring-info');
-
+    startSensor();
     //Registering click event handler for buttons.
-    infoBackBtn.addEventListener('click', onInfoBackBtnClick);
-    hrmControlBtn.addEventListener('click', onhrmControlBtnClick);
+    // infoBackBtn.addEventListener('click', onInfoBackBtnClick);
+    // hrmControlBtn.addEventListener('click', onhrmControlBtnClick);
 }
 
 /*
  * Click event handler for HRM sensor Start/Stop
  * Toggles the sensor state.
  */
-function onhrmControlBtnClick() {
-    console.log("onhrmControlBtnClick() called...");
+// function onhrmControlBtnClick() {
+//     console.log("onhrmControlBtnClick() called...");
 
-    if (hrmControlBtn.innerHTML === TEXT_START){
-        console.log("info on button = start");
-        startSensor();
-    } else {
-        console.log("info on button = stop");
-        stopSensor();
-    }
-}
+//     if (hrmControlBtn.innerHTML === TEXT_START){
+//         console.log("info on button = start");
+//         startSensor();
+//     } else {
+//         console.log("info on button = stop");
+//         stopSensor();
+//     }
+// }
 
 /*
  * Starts the HRM sensor and registers a change listener.
  * Update the UI: Shows measuring text, and change button text to Stop.
  */
-function startSensor() {
-    console.log("start sensor() called...");
-    sensorStarted = true;
-    clearTimers();
-    measuringText.classList.remove('hide');
-    measuringText.classList.add('show');
-    hrmControlBtn.innerHTML = TEXT_STOP;
-
-    tizen.humanactivitymonitor.start('HRM', onHeartRateDataChange, onerrorCB);
-}
 
 /*
  * Clear the timers if running for handling the information popup.
