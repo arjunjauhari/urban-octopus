@@ -7,10 +7,13 @@ var TEXT_STOP = 'Stop';
 var TEXT_START = 'Start';
 
 var heartRateEl;
+var accelRateEl;
 var heartImg;
 var infoBackBtn;
 var hrmControlBtn;
 var measuringText;
+var lefttext;
+var righttext;
 
 var infoTimeoutEnd = 0;
 var infoTimeout = 0;
@@ -20,6 +23,7 @@ var sensorStarted = false;
 var accelStart = true;
 
 var initial = new Date().getTime();
+var lastTrigSamp = new Date().getTime();
 var dataLength = 100;
 var dpsX = [];
 var dpsY = [];
@@ -59,6 +63,21 @@ function startSensors() {
     AccelToggle();
 }
 
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('yesbuttontext').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
 /*
  * Function invoked on onload event
  */
@@ -67,10 +86,14 @@ function init()
     console.log("init() called...");
     openDB();
     heartRateEl = document.getElementById('heart-rate-value');
+    accelRateEl = document.getElementById('accel-rate-value');
     heartImg = document.getElementById('heart-img');
     infoBackBtn = document.getElementById('info-back-btn');
     hrmControlBtn= document.getElementById('hrm-control-btn');
     measuringText = document.getElementById('measuring-info');
+    lefttext = document.getElementById('yesbuttontext');
+    righttext = document.getElementById('nobuttontext');
+    startTime();
 
     startSensors();
 
@@ -85,6 +108,104 @@ function init()
     });
 }
 
+function engine() {
+    console.log("engine called...")
+    var hrtrigger = false;
+    // read last 5 values
+    var curHRWindow = mainHRWindow.slice(Math.max(mainHRWindow.length - 5, 1))
+    // avg
+    var avgHR = get_avg(curHRWindow);
+    console.log(avgHR);
+    if (avgHR > 72) {
+        hrtrigger = true;
+    } else {
+        hrtrigger = false;
+    }
+
+    var actrigger = false;
+    var sumAC = {
+        'x': 0,
+        'y': 0,
+        'z': 0
+    };
+    // read last 20 values
+    var curACWindow = mainAccelWindow.slice(Math.max(mainAccelWindow.length - 20, 1))
+    // get pairwise delta for each axis
+    var tmp = get_pw_delta(curACWindow);
+    // sum all of them
+    for (i = 0; i < tmp.length; i++) {
+        sumAC.x += tmp[i].x;
+        sumAC.y += tmp[i].y;
+        sumAC.z += tmp[i].z;
+    }
+    // print
+    console.log(sumAC);
+    finalAC = sumAC.x + sumAC.y + sumAC.z;
+    console.log(finalAC);
+    if (finalAC > 1000) {
+        actrigger = true;
+    } else {
+        actrigger = false;
+    }
+
+    accelRateEl.innerHTML = finalAC;
+    // use both the triggers
+    if (hrtrigger && actrigger) {
+        console.log("ALERT!!ALERT!!");
+        lefttext.innerHTML = 'NOT OK?';
+        righttext.innerHTML = 'OK?';
+        timerFunc();
+        setTimeout(stage3, 30000);
+        lefttext.addEventListener('click', stage3)
+
+        righttext.addEventListener('click', good)
+    }
+}
+function timerFunc() {
+    var today = new Date();
+    var s = today.getSeconds();
+    s = checkTime(s);
+    timerEl.innerHTML = s;
+    var t = setTimeout(timerFunc, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+function stage3() {
+    lefttext.innerHTML = 'ALERT';
+    righttext.innerHTML = 'HELP';
+}
+function good() {
+    lefttext.innerHTML = 'OK';
+    righttext.innerHTML = 'GREAT';
+}
+function get_pw_delta(arr) {
+    var out = [];
+    var tmp = {
+        'x': 0,
+        'y': 0,
+        'z': 0
+    };
+    for (i = 1; i < arr.length; i++) {
+        tmp.x = Math.abs(arr[i].x - arr[i-1].x);
+        tmp.y = Math.abs(arr[i].y - arr[i-1].y);
+        tmp.z = Math.abs(arr[i].z - arr[i-1].z);
+        out.push(tmp);
+    }
+
+    return out
+}
+
+function get_avg(arr) {
+    var sum = 0
+    for (i = 0; i < arr.length; i++) {
+        sum += arr[i];
+    }
+
+    return sum/arr.length;
+}
 /*
  * Clear the timers if running for handling the information popup.
  */
@@ -161,6 +282,12 @@ function onHeartRateDataChange(heartRateInfo) {
         // Save to db
         submitNewRecord(rate);
         mainHRWindow.push(rate);
+    }
+
+    var timeDelta = new Date().getTime() - lastTrigSamp;
+    if (timeDelta > 2000) {
+        lastTrigSamp = new Date().getTime();
+        engine();
     }
 }
 
@@ -401,29 +528,29 @@ function AccelToggle() {
 };
 
 function updateChart(x, y, z) {
-	var chart = new CanvasJS.Chart("chartContainer",{
-		title :{
-			fontColor: "#ccc",
-			text: "Sensor Data"
-		},
-		backgroundColor: "#222",
-		data: [{
-			color: "#1E90FF",
-			type: "line",
-			dataPoints: dpsX
-		}, {
-			color: "#228B22",
-			type: "line",
-			dataPoints: dpsY
-		}, {
-			color: "#B22222",
-			type: "line",
-			dataPoints: dpsZ
-		}]
-	});
+	//var chart = new CanvasJS.Chart("chartContainer",{
+	//	title :{
+	//		fontColor: "#ccc",
+	//		text: "Sensor Data"
+	//	},
+	//	backgroundColor: "#222",
+	//	data: [{
+	//		color: "#1E90FF",
+	//		type: "line",
+	//		dataPoints: dpsX
+	//	}, {
+	//		color: "#228B22",
+	//		type: "line",
+	//		dataPoints: dpsY
+	//	}, {
+	//		color: "#B22222",
+	//		type: "line",
+	//		dataPoints: dpsZ
+	//	}]
+	//});
 	var lastSecond = -1;
     time = new Date().getTime() - initial;
-    console.log("[" + time + ", " + x + "," + y + "," + z + "]");
+    //console.log("[" + time + ", " + x + "," + y + "," + z + "]");
     dpsX.push({
     	x: time / 1000.0,
     	y: x
@@ -447,7 +574,7 @@ function updateChart(x, y, z) {
 
     if(dpsX.length >= dataLength) {
         console.log("Rendering.............")
-    	chart.render();
+    	//chart.render();
     }
 };
 
@@ -469,6 +596,12 @@ function deviceMotionHandler(e) {
          accelval.x,
          accelval.y,
          accelval.z);
+
+    var timeDelta = new Date().getTime() - lastTrigSamp;
+    if (timeDelta > 2000) {
+        lastTrigSamp = new Date().getTime();
+        engine();
+    }
 }
 
 function get_hr_data() {
