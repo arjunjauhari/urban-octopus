@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,user-scalable=no">
+	<title>Bendo</title>
+	<link rel="stylesheet" href="lib/tau/wearable/theme/default/tau.min.css">
+	<link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)" href="lib/tau/wearable/theme/default/tau.circle.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="script.js"></script>
+	<script type="text/javascript" src="lib/tau/wearable/js/tau.min.js"></script>
+	<script type="text/javascript" src="js/circle-helper.js"></script>
+	<script type="text/javascript" src="js/canvasjs.min.js"></script>
+	<script src="./js/app.js"></script>
+	<script src="lowBatteryCheck.js"></script>
+</head>
+<body onload="init()">
+     <div class="ui-page ui-page-active" id="main">
+		<div id="buttoncontainer">
+	    <div id="yesbutton" onclick="cancelfunction()"><p id="yesbuttontext">Yes</p></div>
+	    <div id="nobutton" onclick="emergencyfuntion()"><p id="nobuttontext">No</p></div>
+    </div>
+    <div id="lowerportion">
+    	<div id="lowerleftdiv"></div>
+    	<div id="lowerrightdiv"></div>
+   
+	    <div id="datacontainer">
+  	        <div class="ui-content" id="heartcontainer">
+	       		<div id="heart-rate-value"></div>
+	           	<div id="heart"><div id="heart-img"></div></div>
+<!-- 	           	<div id="measuring-info">Measuring...</div> -->
+	        </div>
+	        <div id="accelerometercontainer">
+	            <div id="accelerometerdata" class="chart"></div>
+	        </div>
+	        <div id="timercontainer">
+	        	<div id="timerdata">0:00</div>
+	        </div>	
+	    </div>
+    </div>
+
+</body>
+</html>
