@@ -1,34 +1,91 @@
-/* #main {
-  background-color: pink;
-  width: 50%;
-} */
-#container {
+/* Top Portion */
+
+
+#buttoncontainer {
+	height: 75%;
+	text-align: center;
+	z-index: 4;
+	opacity: 0.7;
+}
+#yesbutton {
+	background-color: yellow;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 50%;
+	height: 100%;
+}
+#yesbuttontext {
+	margin: 4.5em 0 0 0;	
+	font-weight: bold;
+	color: gold;
+}
+#nobuttontext {
+	margin: 4.5em 0 0 0;
+	font-weight: bold;
+	color: lightblue;
+}
+#nobutton {
+	background-color: navy;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 50%;
+	height: 100%;
+} 
+
+
+/* Bottom Portion */
+
+#lowerleftdiv {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 50%;
+	height: 100%;
+	background: url(../images/peaceful.gif);
+	background-size: cover;
+}
+#lowerrightdiv {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 50%;
+	height: 100%;
+	background: url(../images/huricane.gif);
+	background-size: cover;
+}
+
+#datacontainer {
 	z-index: 1;
 	background-color: white;
-	opacity: 0.3;
-	height: 25%;
+	opacity: 0.9;
+	height: 50%;
+}
+
+#heartcontainer {
+	position: absolute;
+	height: 5.5em;
+    width: 7em;
+  	bottom: 30px; /* adjust */
+  	right: 20%;
+    background-color: red;
+	border-radius: 9.375em 9.375em 0 0;
+	opacity: 0.6;
+	z-index: 1;
 }
 #heart-rate-value {
     position: absolute;
     text-align: center;
     width: 100%;
     height: 20%;
-    font-size: 35px;
+    font-size: 2.2em;
     font-weight: bold;
-    z-index: 100;
-    margin-left: -30%;
-    color: #000000;
-}
-#accel-rate-value {
-position: absolute;
-text-align: center;
-width: 100%;
-height: 20%;
-font-size: 35px;
-font-weight: bold;
-z-index: 100;
-margin-left: 90%;
-color: rgb(0, 0, 0);
+    z-index: 3;
+    margin-top: 55%;
+    margin-left: -20%;
+    color: red;
+    opacity: 0.5;
 }
 #heart {
     position: fixed;
@@ -38,31 +95,18 @@ color: rgb(0, 0, 0);
     left: 2.5em;
     opacity: 0.5;
 }
-
 #heart-img {
     background-image: url(../images/heart.png);
     background-position: center;
     background-size: cover;
 }
-
 #measuring-info {
     position: absolute;
     float: left;
     margin-left: 1%;
     color: white;
-    font-size: 20px;
+    font-size: 1.25em;
 }
-
-.hide {
-    display: none;
-}
-
-.info-text {
-    text-align: left;
-    color: #ffffff;
-    font-size: 24px;
-}
-
 @-webkit-keyframes heartMove360 {
     0%, 50%, 100% {
         width: 35%;
@@ -73,7 +117,6 @@ color: rgb(0, 0, 0);
         height: 45%;
     }
 }
-
 @media screen and (-tizen-geometric-shape: circle) {
     #measuring-info {
         position: relative;
@@ -86,69 +129,37 @@ color: rgb(0, 0, 0);
     .animate {
         -webkit-animation: heartMove360 1.5s infinite;
     }
-    .info-text {
-        text-align: center;
-        margin-left: 5%;
-        margin-right: 5%;
-    }
-}
-
-#timercontainer {
-    position: fixed;
-    width: 13%;
-    height: 13%;
-    bottom: 0.9em;
-    left: 4.5em;
-    opacity: 0.5;
-    background-color: yellow;
-    z-index: 5;
-}
-
-#timerdata {
-	color: purple;
-	font-size: 10px;
 }
 
 #accelerometercontainer {
-    position: fixed;
-    width: 30%;
-    height: 13%;
-    bottom: 0.9em;
-    left: 6.5em;
-    opacity: 0.5;
+	position: absolute;
+	height: 3.5em;
+    width: 6em;
+  	bottom: 0;
+  	right: 22.5%;
     background-color: orange;
+	border-radius: 9.375em 9.375em 0 0;
+	opacity: 0.7;
+	z-index: 2;
 }
 #accelerometerdata {
 	color: green;
-	font-size: 10px;
+	font-size: 0.63em;
 }
-#buttoncontainer {
-	height: 75%;
+
+#timercontainer {
+	position: absolute;
+	height: 2.5em;
+    width: 5em;
+  	bottom: 0;
+  	right: 27.5%;
+    background-color: yellow;
+	border-radius: 9.375em 9.375em 0 0;
+	opacity: 0.8;
+	z-index: 3;
+}
+#timerdata {
+	color: purple;
+	font-size: 0.6em;
 	text-align: center;
 }
-#yesbutton {
-	background-color: #ff9e2c;
-	position: absolute;
-	left: 0px;
-	width: 50%;
-	height: 100%;
-	opacity: 0.7;
-}
-#yesbuttontext {
-	margin: 4.5em 0 0 0;	
-	font-weight: bold;
-}
-#nobuttontext {
-	margin: 4.5em 0 0 0;
-	font-weight: bold;
-}
-#nobutton {
-	background-color: #b6701e;
-	position: absolute;
-	right: 0px;
-	width: 50%;
-	height: 100%;
-	opacity: 0.7;
-} 
-
-
