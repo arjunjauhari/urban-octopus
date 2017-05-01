@@ -112,7 +112,7 @@ function engine() {
     console.log("engine called...")
     var hrtrigger = false;
     // read last 5 values
-    var curHRWindow = mainHRWindow.slice(Math.max(mainHRWindow.length - 5, 1))
+    var curHRWindow = mainHRWindow.slice(Math.max(mainHRWindow.length - 5, 0))
     // avg
     var avgHR = get_avg(curHRWindow);
     console.log(avgHR);
@@ -129,7 +129,7 @@ function engine() {
         'z': 0
     };
     // read last 20 values
-    var curACWindow = mainAccelWindow.slice(Math.max(mainAccelWindow.length - 20, 1))
+    var curACWindow = mainAccelWindow.slice(Math.max(mainAccelWindow.length - 20, 0))
     // get pairwise delta for each axis
     var tmp = get_pw_delta(curACWindow);
     // sum all of them
@@ -139,9 +139,9 @@ function engine() {
         sumAC.z += tmp[i].z;
     }
     // print
-    console.log(sumAC);
+    //console.log(sumAC);
     finalAC = sumAC.x + sumAC.y + sumAC.z;
-    console.log(finalAC);
+    console.log("Final AC: ", finalAC);
     if (finalAC > 1000) {
         actrigger = true;
     } else {
@@ -285,7 +285,7 @@ function onHeartRateDataChange(heartRateInfo) {
     }
 
     var timeDelta = new Date().getTime() - lastTrigSamp;
-    if (timeDelta > 2000) {
+    if (timeDelta > 0) {
         lastTrigSamp = new Date().getTime();
         engine();
     }
@@ -598,7 +598,7 @@ function deviceMotionHandler(e) {
          accelval.z);
 
     var timeDelta = new Date().getTime() - lastTrigSamp;
-    if (timeDelta > 2000) {
+    if (timeDelta > 0) {
         lastTrigSamp = new Date().getTime();
         engine();
     }

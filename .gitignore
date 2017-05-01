@@ -29,3 +29,5 @@ tags
 *tmp*
 .meta*
 BendoProj
+BendoProj/*
+lib/*
