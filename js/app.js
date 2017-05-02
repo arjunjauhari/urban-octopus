@@ -5,22 +5,24 @@ var INFO_SETTIMEOUT_DELAY = 10000;
 var INFO_SHOW_DELAY = 10000;
 var TEXT_STOP = 'Stop';
 var TEXT_START = 'Start';
+var TIMER_MS = 30000;
 
 var heartRateEl;
 var accelRateEl;
 var heartImg;
 var infoBackBtn;
 var hrmControlBtn;
-var measuringText;
+var timeEl;
+var timerEl;
 var lefttext;
 var righttext;
 
+var countDownTo;
 var infoTimeoutEnd = 0;
 var infoTimeout = 0;
 
 var sensorStarted = false;
-
-var accelStart = true;
+var isTrigActive = false;
 
 var initial = new Date().getTime();
 var lastTrigSamp = new Date().getTime();
@@ -54,13 +56,9 @@ function startSensors() {
     console.log("start sensor() called...");
     sensorStarted = true;
     clearTimers();
-    measuringText.classList.remove('hide');
-    measuringText.classList.add('show');
-    // hrmControlBtn.innerHTML = TEXT_STOP;
 
     tizen.humanactivitymonitor.start('HRM', onHeartRateDataChange, onerrorCB);
-    //tizen.humanactivitymonitor.start('WRIST_UP', onWUDataChange, onerrorCB);
-    AccelToggle();
+    AccelToggle(true);
 }
 
 function startTime() {
@@ -70,37 +68,40 @@ function startTime() {
     var s = today.getSeconds();
     m = checkTime(m);
     s = checkTime(s);
-    document.getElementById('yesbuttontext').innerHTML =
-    h + ":" + m + ":" + s;
+    timeEl.innerHTML = h + ":" + m + ":" + s;
     var t = setTimeout(startTime, 500);
 }
+
 function checkTime(i) {
     if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
     return i;
 }
+
 /*
  * Function invoked on onload event
  */
 function init()
 {
     console.log("init() called...");
-    openDB();
+    timeEl = document.getElementById('time');
+    lefttext = document.getElementById('leftbuttontext');
+    righttext = document.getElementById('rightbuttontext');
     heartRateEl = document.getElementById('heart-rate-value');
-    accelRateEl = document.getElementById('accel-rate-value');
     heartImg = document.getElementById('heart-img');
-    infoBackBtn = document.getElementById('info-back-btn');
-    hrmControlBtn= document.getElementById('hrm-control-btn');
-    measuringText = document.getElementById('measuring-info');
-    lefttext = document.getElementById('yesbuttontext');
-    righttext = document.getElementById('nobuttontext');
-    startTime();
+    accelRateEl = document.getElementById('accelerometerdata');
+    timerEl = document.getElementById('timerdata');
 
+    timerEl.style.visibility = "hidden";
+    lefttext.style.visibility = "hidden";
+
+    openDB();
+    startTime();
     startSensors();
 
     //Registering click event handler for buttons.
 	document.addEventListener('tizenhwkey', function(e) {
         if(e.keyName == "back") {
-            stopSensor();
+            stopSensors();
             console.log(mainHRWindow);
             console.log(mainAccelWindow);
             tizen.application.getCurrentApplication().exit();
@@ -133,62 +134,95 @@ function engine() {
     // get pairwise delta for each axis
     var tmp = get_pw_delta(curACWindow);
     // sum all of them
-    for (i = 0; i < tmp.length; i++) {
+    for (var i = 0; i < tmp.length; i++) {
         sumAC.x += tmp[i].x;
         sumAC.y += tmp[i].y;
         sumAC.z += tmp[i].z;
     }
-    // print
-    //console.log(sumAC);
-    finalAC = sumAC.x + sumAC.y + sumAC.z;
+    var finalAC = sumAC.x + sumAC.y + sumAC.z;
     console.log("Final AC: ", finalAC);
-    if (finalAC > 1000) {
+    if (finalAC > 500) {
         actrigger = true;
     } else {
         actrigger = false;
     }
 
-    accelRateEl.innerHTML = finalAC;
+    accelRateEl.innerHTML = Math.floor(finalAC);
     // use both the triggers
-    if (hrtrigger && actrigger) {
+    if (hrtrigger && actrigger && !isTrigActive) {
+        isTrigActive = true;
         console.log("ALERT!!ALERT!!");
-        lefttext.innerHTML = 'NOT OK?';
-        righttext.innerHTML = 'OK?';
-        timerFunc();
-        setTimeout(stage3, 30000);
-        lefttext.addEventListener('click', stage3)
+        timeEl.style.visibility = "hidden";
+        lefttext.innerHTML = 'YES';
+        lefttext.style.visibility = "visible";
+        righttext.innerHTML = 'NO';
 
-        righttext.addEventListener('click', good)
+        countDownTo = new Date(new Date().getTime() + TIMER_MS);
+        timerID = setInterval(timerFunc, 1000);
+
+        lefttext.addEventListener('click', good)
+        righttext.addEventListener('click', stage3)
     }
 }
+
 function timerFunc() {
-    var today = new Date();
-    var s = today.getSeconds();
-    s = checkTime(s);
-    timerEl.innerHTML = s;
-    var t = setTimeout(timerFunc, 500);
-}
-function checkTime(i) {
-    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-    return i;
+    timerExpired = false;
+    var now = new Date();
+    var distance = countDownTo - now;
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    s = checkTime(seconds);
+    timerEl.innerHTML = minutes + ":" + s;
+    timerEl.style.visibility = "visible";
+
+    if (distance < 0) {
+        timerExpired = true;
+        clearInterval(timerID);
+        //FIXME
+        // implement send alert to caregiver here
+        stage3();
+    }
 }
 
 function stage3() {
-    lefttext.innerHTML = 'ALERT';
+    if (!isTrigActive) {
+        return;
+    }
+
+    isTrigActive = false;
+    timerExpired = true;
+    clearInterval(timerID);
+    timerEl.style.visibility = 'hidden';
+    lefttext.innerHTML = 'CALLING';
     righttext.innerHTML = 'HELP';
+
+    stopSensors();
 }
+
 function good() {
-    lefttext.innerHTML = 'OK';
-    righttext.innerHTML = 'GREAT';
+    if (!isTrigActive || timerExpired) {
+        return;
+    }
+
+    // go back to monitor mode
+    isTrigActive = false;
+    timerExpired = true;
+    clearInterval(timerID);
+    timerEl.style.visibility = 'hidden';
+    lefttext.style.visibility = 'hidden';
+    timeEl.style.visibility = 'visible';
+    righttext.innerHTML = 'Monitoring';
 }
+
 function get_pw_delta(arr) {
     var out = [];
-    var tmp = {
-        'x': 0,
-        'y': 0,
-        'z': 0
-    };
-    for (i = 1; i < arr.length; i++) {
+
+    for (var i = 1; i < arr.length; i++) {
+        var tmp = {
+            'x': 0,
+            'y': 0,
+            'z': 0
+        };
         tmp.x = Math.abs(arr[i].x - arr[i-1].x);
         tmp.y = Math.abs(arr[i].y - arr[i-1].y);
         tmp.z = Math.abs(arr[i].z - arr[i-1].z);
@@ -200,7 +234,7 @@ function get_pw_delta(arr) {
 
 function get_avg(arr) {
     var sum = 0
-    for (i = 0; i < arr.length; i++) {
+    for (var i = 0; i < arr.length; i++) {
         sum += arr[i];
     }
 
@@ -247,13 +281,11 @@ function onHeartRateDataChange(heartRateInfo) {
      * Displays measuring text and start a timer to show the information popup after 10 seconds.
      */
 
-    if (rate < 1) {
+    if (rate < 1) {     // FIXME
         console.log("Heart rate value < 1");
         rate = 0;
         heartRateEl.innerHTML = '';
         heartImg.classList.remove('animate');
-        measuringText.classList.remove('hide');
-        measuringText.classList.add('show');
 
         /* Start a timer when sensor is started but not able to measure the heart rate
          * showMeasuringInfo() function will be execute after 10 sec and will show a info popup.
@@ -270,13 +302,9 @@ function onHeartRateDataChange(heartRateInfo) {
          * Start the animation on heart image
          * and displays the heart rate value.
          */
-        clearTimers();
-        hideMeasuringInfo();
         console.log("heartRateEl is valid information...");
         if (!heartImg.classList.contains('animate')) {
             heartImg.classList.add('animate');
-            measuringText.classList.remove('show');
-            measuringText.classList.add('hide');
         }
         heartRateEl.innerHTML = rate;
         // Save to db
@@ -285,7 +313,7 @@ function onHeartRateDataChange(heartRateInfo) {
     }
 
     var timeDelta = new Date().getTime() - lastTrigSamp;
-    if (timeDelta > 0) {
+    if (timeDelta > 1000) {
         lastTrigSamp = new Date().getTime();
         engine();
     }
@@ -480,16 +508,15 @@ function hideMeasuringInfo() {
  * Clears timers (to handle info popup)
  * Update the UI: Hides measuring text, stop animation on heart image and change button text to Start.
  */
-function stopSensor() {
-    console.log("stopSensor() called...");
+function stopSensors() {
+    console.log("stopSensors() called...");
     sensorStarted = false;
     heartImg.classList.remove('animate');
-    measuringText.classList.remove('show');
-    measuringText.classList.add('hide');
 
     clearTimers();
 
     tizen.humanactivitymonitor.stop("HRM");
+    AccelToggle(false);
     //hrmControlBtn.innerHTML = TEXT_START;
     loadDataView(db)
 }
@@ -509,7 +536,7 @@ function onInfoBackBtnClick() {
  * Accelerometer
  */
 
-function AccelToggle() {
+function AccelToggle(accelStart) {
     console.log("onAccelControlBtnClick() called...");
     if (accelStart === true){
         console.log("Starting Accel");
@@ -519,11 +546,9 @@ function AccelToggle() {
         } else {
             console.log("Device Motion not supported")
         }
-        accelStart = false;
     } else {
         console.log("Stopping Accel");
 	    window.removeEventListener('devicemotion', deviceMotionHandler, false);
-        accelStart = true;
     }
 };
 
@@ -598,7 +623,7 @@ function deviceMotionHandler(e) {
          accelval.z);
 
     var timeDelta = new Date().getTime() - lastTrigSamp;
-    if (timeDelta > 0) {
+    if (timeDelta > 1000) {
         lastTrigSamp = new Date().getTime();
         engine();
     }

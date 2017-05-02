@@ -7,7 +7,7 @@
 	z-index: 4;
 	opacity: 0.7;
 }
-#yesbutton {
+#leftbutton {
 	background-color: yellow;
 	position: absolute;
 	top: 0;
@@ -15,17 +15,22 @@
 	width: 50%;
 	height: 100%;
 }
-#yesbuttontext {
+#time {
 	margin: 4.5em 0 0 0;	
 	font-weight: bold;
 	color: gold;
 }
-#nobuttontext {
+#leftbuttontext {
+	margin: -1.1em 0 0 0;	
+	font-weight: bold;
+	color: gold;
+}
+#rightbuttontext {
 	margin: 4.5em 0 0 0;
 	font-weight: bold;
 	color: lightblue;
 }
-#nobutton {
+#rightbutton {
 	background-color: navy;
 	position: absolute;
 	top: 0;
@@ -145,6 +150,7 @@
 #accelerometerdata {
 	color: green;
 	font-size: 0.63em;
+	text-align: center;
 }
 
 #timercontainer {
