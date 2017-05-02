@@ -33,3 +33,6 @@ BendoProj/*
 lib/*
 UrbanOctopus/*
 .settings/
+.*
+!/.gitignore
+*.wgt
