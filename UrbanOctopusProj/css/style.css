@@ -69,12 +69,12 @@
 
 #heartcontainer {
 	position: absolute;
-	height: 5.5em;
-  width: 7em;
-	bottom: -10%; /* adjusts vertical location of heart container */
-	right: 17.5%;
+	height: 6em;
+  width: 10em;
+	bottom: -17%; /* adjusts vertical location of heart container */
+	right: 2.5%;
   background-color: red;
-	border-radius: 9.375em 9.375em 0 0;
+	border-radius: 50%;
 	opacity: 0.6;
 	z-index: 1;
 }
@@ -86,12 +86,13 @@
   opacity: 0.6;
 }
 #heart {
-  position: fixed;
+/*  position: fixed;
   width: 40%;
   height: 30%;
   bottom: -1em;
   left: 2.5em;
-  opacity: 0.5;
+  opacity: 0.5;*/
+  visibility: hidden;
 }
 #heart-img {
   background-image: url(../images/heart.png);
@@ -130,15 +131,15 @@
 }
 
 #accelerometercontainer {
-	position: absolute;
-	height: 3.5em;
-  width: 6em;
-  bottom: 0; /* adjusts vertical location of accelerometer container */
-  right: 22.5%;
+  position: absolute;
+  height: 3.9em;
+  width: 8em;
+  bottom: -10%; /* adjusts vertical location of accelerometer container */
+  right: 12.5%;
   background-color: orange;
-	border-radius: 9.375em 9.375em 0 0;
-	opacity: 0.7;
-	z-index: 2;
+  border-radius: 50%;
+  opacity: 0.7;
+  z-index: 2;
 }
 #accelerometerdata {
   text-align: center;
@@ -150,12 +151,12 @@
 
 #timercontainer {
 	position: absolute;
-	height: 2.5em;
-  width: 5em;
-  bottom: 0; /* adjusts vertical location of timer container */
-  right: 27.5%;
+	height: 2em;
+  width: 6em;
+  bottom: -5%; /* adjusts vertical location of timer container */
+  right: 22.5%;
   background-color: yellow;
-	border-radius: 9.375em 9.375em 0 0;
+	border-radius: 50%;
 	opacity: 0.8;
 	z-index: 3;
 }
