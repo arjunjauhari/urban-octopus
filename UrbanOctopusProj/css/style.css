@@ -1,43 +1,54 @@
 /* Top Portion */
 
-
 #buttoncontainer {
 	height: 75%;
 	text-align: center;
 	z-index: 4;
 }
+#buttoncontainer:after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  content: "";
+  display: block;
+  background: radial-gradient(ellipse, rgba(255,255,255,0) 25%,rgba(255,255,255,1) 100%);
+  border-radius: 50%;
+  pointer-events: none;
+}
 #leftbutton {
-	background-color: yellow;
+	background-color: transparent;
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 50%;
 	height: 100%;
-	opacity: 0.6; /* change me! */
+	opacity: 0.7; /* change me! */
 }
 #time {
 	margin: 4.5em 0 0 0;
 	font-weight: bold;
-	color: gold;
+	color: #d0e4e7;
 }
 #leftbuttontext {
 	margin: -1.1em 0 0 0;
 	font-weight: bold;
-	color: gold;
+	color: #d0e4e7;
 }
 #rightbutton {
-	background-color: navy;
+	background-color: transparent;
 	position: absolute;
 	top: 0;
 	right: 0;
 	width: 50%;
 	height: 100%;
-	opacity: 0.6; /* change me! */
+	opacity: 0.7; /* change me! */
 }
 #rightbuttontext {
 	margin: 4.5em 0 0 0;
 	font-weight: bold;
-	color: lightblue;
+	color: #d0e4e7;
 }
 
 /* Bottom Portion */
@@ -58,11 +69,11 @@
 	width: 50%;
 	height: 100%;
 	background: url(../images/huricane.gif);
-	background-size: cover;
+	background-size: 100% 100%;
+  box-shadow: -10px 0px 5px rgba(2,30,40,0.5);
 }
 
 #datacontainer {
-	background-color: white;
 	opacity: 0.9;
 	height: 50%;
 }
@@ -73,25 +84,19 @@
   width: 10em;
 	bottom: -17%; /* adjusts vertical location of heart container */
 	right: 2.5%;
-  background-color: red;
+  background-color: #1bc5c6;
 	border-radius: 50%;
 	opacity: 0.6;
 	z-index: 1;
+  box-shadow: 5px -5px 5px rgba(2,30,40,0.9);
 }
 #heart-rate-value {
   text-align: center;
   font-size: 1em;
   font-weight: bold;
-  color: black;
-  opacity: 0.6;
+  color: #d0e4e7;
 }
 #heart {
-/*  position: fixed;
-  width: 40%;
-  height: 30%;
-  bottom: -1em;
-  left: 2.5em;
-  opacity: 0.5;*/
   visibility: hidden;
 }
 #heart-img {
@@ -103,7 +108,7 @@
   position: absolute;
   float: left;
   margin-left: 1%;
-  color: white;
+  color: #d0e4e7;
   font-size: 20px;
 }
 @-webkit-keyframes heartMove360 {
@@ -136,17 +141,17 @@
   width: 8em;
   bottom: -10%; /* adjusts vertical location of accelerometer container */
   right: 12.5%;
-  background-color: orange;
+  background-color: #3f5d68;
   border-radius: 50%;
   opacity: 0.7;
   z-index: 2;
+  box-shadow: 5px -5px 5px rgba(2,30,40,0.9);
 }
 #accelerometerdata {
   text-align: center;
   font-size: 1em;
   font-weight: bold;
-  color: black;
-  opacity: 0.7;
+  color: #d0e4e7;
 }
 
 #timercontainer {
@@ -155,15 +160,15 @@
   width: 6em;
   bottom: -5%; /* adjusts vertical location of timer container */
   right: 22.5%;
-  background-color: yellow;
+  background-color: #344d56;
 	border-radius: 50%;
 	opacity: 0.8;
 	z-index: 3;
+  box-shadow: 5px -5px 5px rgba(2,30,40,0.9);
 }
 #timerdata {
   text-align: center;
   font-size: 1em;
   font-weight: bold;
-  color: black;
-  opacity: 0.8;
+  color: #d0e4e7;
 }

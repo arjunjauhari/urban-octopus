@@ -153,9 +153,9 @@ function engine() {
         isTrigActive = true;
         console.log("ALERT!!ALERT!!");
         timeEl.style.visibility = "hidden";
-        lefttext.innerHTML = 'YES';
+        lefttext.innerHTML = 'Yes';
         lefttext.style.visibility = "visible";
-        righttext.innerHTML = 'NO';
+        righttext.innerHTML = 'No';
 
         countDownTo = new Date(new Date().getTime() + TIMER_MS);
         timerID = setInterval(timerFunc, 1000);
@@ -193,8 +193,8 @@ function stage3() {
     timerExpired = true;
     clearInterval(timerID);
     timerEl.style.visibility = 'hidden';
-    lefttext.innerHTML = 'CALLING';
-    righttext.innerHTML = 'HELP';
+    lefttext.innerHTML = 'Calling';
+    righttext.innerHTML = 'Help';
 
     stopSensors();
 }
