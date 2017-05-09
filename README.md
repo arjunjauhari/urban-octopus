@@ -1,4 +1,4 @@
-# ![alt-tag](http://gph.is/2qXbCpp) 
+# ![alt-tag](http://www.giphy.com/gifs/3o7bukO5tmAx1cOKVG) 
 # Bendo
 
 ### Purpose of Device
@@ -13,7 +13,7 @@ Some of the things that were identified as solutions or interventions to an ener
 
 ### Approach Taken
 
-# ![alt text](../images/BendoAppFlow.png)
+# ![alt-tag]('../images/BendoAppFlow.png')
 
 1. Regular Watch Screen on left
     * If HR goes up within given time period and movement pattern is detected, it will trigger to the state in the middle
