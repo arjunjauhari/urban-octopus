@@ -1,4 +1,4 @@
-# ![alt-tag](https://media.giphy.com/media/3o7bukO5tmAx1cOKVG/giphy.gif) 
+# ![alt-tag](./images/BendoAppFlow.gif)
 # Bendo
 
 ### Purpose of Device
