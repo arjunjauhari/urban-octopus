@@ -141,7 +141,7 @@ function engine() {
     }
     var finalAC = sumAC.x + sumAC.y + sumAC.z;
     console.log("Final AC: ", finalAC);
-    if (finalAC > 500) { /* adjust integer for testing purposes */
+    if (finalAC > 5) { /* adjust integer for testing purposes */
         actrigger = true;
     } else {
         actrigger = false;
