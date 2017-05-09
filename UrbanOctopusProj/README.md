@@ -56,3 +56,7 @@ Some of the things that were identified as solutions or interventions to an ener
 
 ---
 
+**Developed By:** ``Michael Kim, Arjun Jauhari, Bryant Eadon, Jonathan Guzman, Michael Spinelli
+``
+
+
