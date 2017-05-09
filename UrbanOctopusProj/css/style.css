@@ -1,3 +1,10 @@
+@font-face { font-family: Quantum; src: url('../fonts/Quantum.otf'); }
+
+* {
+  font-family: Quantum;
+  font-weight: bold;
+}
+
 /* Top Portion */
 
 #buttoncontainer {
