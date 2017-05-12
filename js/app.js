@@ -141,7 +141,7 @@ function engine() {
     }
     var finalAC = sumAC.x + sumAC.y + sumAC.z;
     console.log("Final AC: ", finalAC);
-    if (finalAC > 500) {
+    if (finalAC > 500) { /* adjust integer for testing purposes */
         actrigger = true;
     } else {
         actrigger = false;
@@ -153,9 +153,9 @@ function engine() {
         isTrigActive = true;
         console.log("ALERT!!ALERT!!");
         timeEl.style.visibility = "hidden";
-        lefttext.innerHTML = 'YES';
+        lefttext.innerHTML = 'Yes';
         lefttext.style.visibility = "visible";
-        righttext.innerHTML = 'NO';
+        righttext.innerHTML = 'No';
 
         countDownTo = new Date(new Date().getTime() + TIMER_MS);
         timerID = setInterval(timerFunc, 1000);
@@ -193,8 +193,8 @@ function stage3() {
     timerExpired = true;
     clearInterval(timerID);
     timerEl.style.visibility = 'hidden';
-    lefttext.innerHTML = 'CALLING';
-    righttext.innerHTML = 'HELP';
+    lefttext.innerHTML = 'Calling';
+    righttext.innerHTML = 'Help';
 
     stopSensors();
 }
@@ -270,7 +270,7 @@ function onHeartRateDataChange(heartRateInfo) {
         }
         dummyHRcnt = 0;
     } else {
-        var rate = heartRateInfo.heartRate;
+        rate = heartRateInfo.heartRate;
     }
     var activePage = document.getElementsByClassName('ui-page-active')[0];
     var activePageId = activePage ? activePage.id : '';
