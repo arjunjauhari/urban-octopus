@@ -37,8 +37,6 @@ Some of the things that were identified as solutions or interventions to an ener
 * **Barometer**
 * **Ambient Light**
 
----
-
 ## Next Big Steps and Future Development
 1. Better User Interface
     * There’s a lot more animations and UI / UX alerts that we did not have enough time to build
